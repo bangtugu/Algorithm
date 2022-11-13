@@ -6,6 +6,7 @@ input = sys.stdin.readline
 dy = [0, 0, 1, -1]
 dx = [1, -1, 0, 0]
 
+
 def check(y, x, d1, d2):
     temp = [[0]*N for _ in range(N)]
     area = [0, 0, 0, 0, 0]
@@ -50,7 +51,6 @@ def check(y, x, d1, d2):
                     temp[i][j] = 4
 
     pprint(temp)
-
 
     return max(area) - min(area)
 
