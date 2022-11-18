@@ -29,13 +29,31 @@
         
 # 100퍼센트까지 가서 틀렸다그럼 ㅠ
 
-import sys
-input = sys.stdin.readline
-
 N = int(input())
-lst = int(input())
+lst = list(map(int, input().split()))
 cost = int(input())
 
 s = cost//N
 e = max(lst)
 
+if sum(lst) <= cost:
+    print(max(lst))
+else:
+    while s <= e:
+
+        middle = (s+e)//2
+
+        now_cost = 0
+
+        for money in lst:
+            if money < middle:
+                now_cost += money
+            else:
+                now_cost += middle
+
+        if now_cost > cost:
+            e = middle - 1
+        else:
+            s = middle + 1
+
+    print(e)
