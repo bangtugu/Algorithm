@@ -28,43 +28,58 @@
 # 블럭을 놓는게 파내는거보다 시간이 덜 걸린다는걸 간과한 코드
 
 
-import sys
+# import sys
+#
+# N, M, B = map(int, sys.stdin.readline().split())
+#
+# ground = []
+#
+# for _ in range(N):
+#     ground += list(map(int, sys.stdin.readline().split()))
+#
+# total = sum(ground)
+#
+# height = total//(N*M)
+# B += total%(N*M)
+#
+# min_time = 500*500*512
+# max_height = 0
+#
+# while B >= 0:
+#
+#     now_time = 0
+#
+#     for i in range(len(ground)):
+#         if ground[i] < height:
+#             now_time += (height - ground[i])
+#         elif ground[i] > height:
+#             now_time += (ground[i] - height) * 2
+#
+#     if now_time <= min_time:
+#         min_time = now_time
+#         max_height = height
+#
+#     height += 1
+#     B -= M*N
+#
+# ## 시간초과
+#
+# print(min_time, max_height)
 
-N, M, B = map(int, sys.stdin.readline().split())
 
-ground = []
 
-for _ in range(N):
-    ground += list(map(int, sys.stdin.readline().split()))
+N, M, B = map(int, input().split())
+land = [list(map(int, input().split())) for _ in range(N)]
 
-total = sum(ground)
+result_time = 0
 
-height = total//(N*M)
-B += total%(N*M)
+total = 0
 
-min_time = 500*500*512
-max_height = 0
+for line in land:
+    total += sum(line)
 
-while B >= 0:
-
-    now_time = 0
-
-    for i in range(len(ground)):
-        if ground[i] < height:
-            now_time += (height - ground[i])
-        elif ground[i] > height:
-            now_time += (ground[i] - height) * 2
-
-    if now_time <= min_time:
-        min_time = now_time
-        max_height = height
-
-    height += 1
-    B -= M*N
-
-## 시간초과
-
-print(min_time, max_height)
+average = total//(N*M)
 
 
 
+print(result_time, land[0][0], total)
