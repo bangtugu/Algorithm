@@ -199,27 +199,20 @@ def solution3(n, paths, gates, summits):
     i = 0
     
     while i < len(lst):
+        
+        now = lst[i]
 
-        temp = set()
-        
-        while i < len(lst):
-        
-            now = lst[i]
-        
-            for path, inten in path_lst[now]:
-                if path in gates:
-                    continue
-                
-                if intensity[path] > max(intensity[now], inten):
-                    intensity[path] = max(intensity[now], inten)
-                    
-                    if path not in summits:
-                        temp.add(path)
+        for path, inten in path_lst[now]:
+            if path in gates:
+                continue
+
+            if intensity[path] > max(intensity[now], inten):
+                intensity[path] = max(intensity[now], inten)
+
+                if path not in summits:
+                    lst.append(path)
             
-            i += 1
-        
-        lst = list(temp)
-        i = 0
+        i += 1
         
     for summit in summits:
         if intensity[summit] > answer_intensity:
@@ -244,4 +237,9 @@ print(solution3(n, paths, gates, summits))
 
 그리고 25번 tc 진짜 계속 시간초과 났는데 gates랑 summits 둘 다 set 해주니까 전체적으로 엄청 빨라지고 바로 통과됐다.
 set으로 걸러주지 않으면 안될 만큼 gate, summit 번호가 엄청 중복된건가? 만약 그렇다면 2번 코드에서 summits 정렬하는데도 엄청 오래 걸렸겠다.
+
+바보야! 뭔 중복이야
+각 정점이 출입구인지 꼭대기인지 계속 탐색해야하는데, n이 최대 50000개이므로 list면 탐색하는데만 O(N)이라 엄청 오래걸림.
+set하면 {{**''[[ 해쉬화 ]]''**}} 되므로 탐색할 시 O(1)이 된다.
+
 '''
