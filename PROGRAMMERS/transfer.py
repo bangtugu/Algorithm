@@ -86,7 +86,7 @@ result = title[-1]+'[t]'
 for i in range(len(title)-1):
     titles += title[i]+'[t], '
 titles = titles[:-2]
-roof_line = 'for t in range(TC):\n    answer = solution({})\n    correct = True if answer == {} else False\n    comment = "answer = {{}}".format({}) if correct else "answer = {{}} your are {{}}".format({}, answer)\n    print("TC{{}} : {{}} {{}}".format(t+1, correct, comment))'.format(titles, result, result, result)
+roof_line = 'for t in range(TC):\n    answer = solution({})\n    correct = True if answer == {} else False\n    comment = "answer = {{}}".format({}) if correct else "answer = {{}} your are {{}}".format({}, answer)\n    print("TC{{}} : {{}} {{}}".format(t+1, "PASS" if correct else "FAIL", comment))'.format(titles, result, result, result)
 
 
 ex += roof_line
