@@ -46,53 +46,69 @@ result = [17, 11, 9, 15, 10]
 
 def solution(rectangle, characterX, characterY, itemX, itemY):
     
-    corner_dic = {}
     lst = [[-1]*51 for _ in range(51)]
-    dy = [0, 0, 1, -1, 1, 1, -1, -1]
-    dx = [1, -1, 0, 0, 1, -1, 1, -1]
+    check = [[0]*51 for _ in range(51)]
+    dy1 = [0, -1, -1, 0]
+    dx1 = [0, 0, -1, -1]
+    dy2 = [0, 0, 1, -1]
+    dx2 = [1, -1, 0, 0]
 
     for i in range(len(rectangle)):
         x1, y1, x2, y2 = rectangle[i]
-
-        for y in range(y1, y2+1):
-            for x in range(x1, x2+1):
+        for y in range(y1, y2):
+            for x in range(x1, x2):
                 lst[y][x] = 0
 
 
     def outside_check(y, x):
-        count = 0
+        count = [1]*4
         for i in range(4):
-            ny = y + dy[i]
-            nx = x + dx[i]
+            ny = y + dy1[i]
+            nx = x + dx1[i]
 
-            if ny >= 51 or ny <= 0 or nx >= 51 or nx <= 0 or lst[ny][nx] == -1: count += 1
+            if ny >= 51 or ny <= 0 or nx >= 51 or nx <= 0 or lst[ny][nx] == -1: count[i] = 0
 
         return count
     
 
     from collections import deque
     Q = deque()
-    Q.append([characterY, characterX])
-    lst[characterY][characterX] = 1
+    Q.append([characterY, characterX, outside_check(characterY, characterX)])
+    check[characterY][characterX] = 1
     while Q:
-        print(Q)
-        nowy, nowx = Q.popleft()
-        if nowy == itemY and nowx == itemX:
-            break
+        nowy, nowx, nowc = Q.popleft()
+        if nowy == itemY and nowx == itemX: break
         
         way = []
         for d in range(4):
-            newy = nowy + dy[d]
-            newx = nowx + dx[d]
+            newy = nowy + dy2[d]
+            newx = nowx + dx2[d]
 
-            if newy >= 51 or newy <= 0 or newx >= 51 or newx <= 0 or lst[newy][newx] == -1: continue
-            if not lst[newy][newx] and outside_check(newy, newx): 
-                way.append([newy, newx])
+            if newy >= 51 or newy <= 0 or newx >= 51 or newx <= 0 or check[newy][newx]: continue
+            way.append([newy, newx, outside_check(newy, newx)])
 
-        if len(way):        
-        lst[newy][newx] = lst[nowy][nowx] + 1
+        for newy, newx, newc in way:
+            if nowx == newx:
+                if nowy < newy:
+                    if nowc[0] != nowc[3]:
+                        Q.append([newy, newx, newc])
+                        check[newy][newx] = check[nowy][nowx] + 1
+                else:
+                    if nowc[1] != nowc[2]:
+                        Q.append([newy, newx, newc])
+                        check[newy][newx] = check[nowy][nowx] + 1
+
+            if nowy == newy:
+                if nowx < newx:
+                    if nowc[0] != nowc[1]:
+                        Q.append([newy, newx, newc])
+                        check[newy][newx] = check[nowy][nowx] + 1
+                else:
+                    if nowc[2] != nowc[3]:
+                        Q.append([newy, newx, newc])
+                        check[newy][newx] = check[nowy][nowx] + 1
     
-    return lst[itemY][itemX]
+    return check[itemY][itemX]-1
 
 
 for t in range(TC):
