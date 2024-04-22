@@ -60,6 +60,14 @@ ex = ''
 if lines:
     N = len(lines)
     title = lines[0].split()
+    if title[-1] == 'return':
+        if 'result' not in title:
+            title[-1] = 'result'
+        else:
+            print('예제 결과값의 변수를 지정해주세요 : ', end='')
+            temp = str(input())
+            title[-1] = temp
+            print()
     for i in range(len(title)):
         line_dic[i] = ''
     for i in range(1, N):
