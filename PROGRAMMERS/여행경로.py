@@ -60,15 +60,8 @@ def solution(tickets):
                 port2 = tickets[temp[j]][1]
 
                 if port1 == port2: continue
-                
-                port1 = [ord(alp) for alp in port1]
-                port2 = [ord(alp) for alp in port2]
-
-                for z in range(3):
-                    if port1[z] == port2[z]: continue
-                    if port1[z] < port2[z]: break
-                    else: result_path = temp; break
-                break
+                port_lst = sorted([port1, port2])
+                result_path = result_path if port_lst[0] == port1 else temp
 
         return result_path
     
