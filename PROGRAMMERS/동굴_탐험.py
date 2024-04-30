@@ -24,20 +24,63 @@ result = [True, True, False]
 
 def solution(n, path, order):
     
-    # table = [[] for _ in range(n)]
-    top = [-1]*n
+    table = [[] for _ in range(n)]
     for a, b in path:
-        top[b] = a
+        table[a].append(b)
+        table[b].append(a)
 
+    top = [-2]*n
+    top[0] = -1
+    idx = 0
+    lst = [0]
+    while idx < len(lst):
+        now = lst[idx]
+        for next in table[now]:
+            if top[next] != -2: continue
+            top[next] = now
+            lst.append(next)
+        idx += 1
+
+    b_dic = {}
     b_set = set()
+    a_dic = {}
     a_set = set()
     for before, after in order:
         b_set.add(before)
         a_set.add(after)
+        b_dic[after] = before
+        a_dic[before] = after
+    if 0 in a_set: return False
 
-    
-    
 
+    import sys
+    sys.setrecursionlimit(200000)
+
+
+    def path_finding(s, never):
+        print(never)
+        path = [s]
+        now = s
+        while True:
+            now = top[now]
+            if now == -1:
+                for p in path:
+                    top[p] = -1
+                return True
+
+            if now in never: return False
+            if now in b_set: never.add(a_dic[now])
+            if now in a_set: 
+                never.add(now)
+                if not path_finding(b_dic[now], never): return False
+                never.remove(now)
+            if now in b_set: never.remove(a_dic[now])
+
+            path.append(now)
+
+
+    for b in list(b_set):
+        if not path_finding(b, set([a_dic[b]])): return False
 
     return True
 
