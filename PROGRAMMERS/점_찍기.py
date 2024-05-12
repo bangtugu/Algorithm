@@ -15,8 +15,13 @@ result = [6, 26]
 
 
 def solution(k, d):
-    '''코드 들어갈곳'''
-    return
+    
+    answer = 0
+
+    for i in range(0, d+1, k):
+        answer += int((d**2-i**2)**(1/2))//k + 1
+
+    return answer
 
 
 for t in range(TC):
