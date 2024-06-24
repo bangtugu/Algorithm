@@ -1,6 +1,5 @@
 import sys
 input = sys.stdin.readline
-# sys.setrecursionlimit(1000) # 재귀시 사용
 
 T = int(input())
 
@@ -23,6 +22,11 @@ for tc in range(T):
                 check[i] += 1
                 building.append([cost[i], i])
         
+        if check[W]:
+            if check[W] == 1:
+                answer += cost[W]
+            break
+
         if not building:
             break
         building.sort(key = lambda x: -x[0])
@@ -37,11 +41,6 @@ for tc in range(T):
                     sett.discard(idx)
                 building.pop()
         answer += now_cost
-
-        if check[W]:
-            if check[W] == 1:
-                answer += cost[W]
-            break
 
     print(answer)
 
