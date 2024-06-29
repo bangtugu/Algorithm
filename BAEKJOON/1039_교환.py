@@ -9,33 +9,30 @@ answer = 0
 number_set = [set() for _ in range(K)]
 Q = deque()
 Q.append([str(N), 0])
-cnt = 0
-for n in str(N):
-    if n != '0': cnt += 1
 
-if cnt <= 1:
-    print(-1)
-else:
-    while Q:
-        num, k = Q.popleft()
+while Q:
+    num, k = Q.popleft()
 
-        if k == K:
-            answer = max(answer, int(num))
-            
-        else:
-            numbers = [num[i] for i in range(len(num))]
-            for i in range(len(numbers)):
-                for j in range(i+1, len(numbers)):
-                    numbers[i], numbers[j] = numbers[j], numbers[i]
-                    number = ''
-                    for z in range(len(numbers)):
-                        number += str(numbers[z])
-                    if number not in number_set[k]:
-                        number_set[k].add(number)
-                        Q.append([number, k+1])
-                    numbers[i], numbers[j] = numbers[j], numbers[i]
+    if k == K:
+        answer = max(answer, int(num))
+        
+    else:
+        numbers = list(num)
+        for i in range(len(numbers)):
+            for j in range(i+1, len(numbers)):
+                if i == 0 and numbers[j] == '0': continue
+                numbers[i], numbers[j] = numbers[j], numbers[i]
+                number = ''.join(numbers)
+                if number not in number_set[k]:
+                    number_set[k].add(number)
+                    Q.append([number, k+1])
+                numbers[i], numbers[j] = numbers[j], numbers[i]
 
+if answer:
     print(answer)
+else:
+    print(-1)
+
 
 # numbers = []
 # for n in str(N):
