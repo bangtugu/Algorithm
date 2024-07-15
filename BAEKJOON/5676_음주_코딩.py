@@ -1,36 +1,91 @@
 import sys
 input = sys.stdin.readline
+sys.setrecursionlimit(1500)
+
+
+def create(l, r, i):
+    if l == r:
+        tree[i][lst[l-1]] += 1
+        return tree[i]
+
+    m = (l+r)//2
+    left = [0, 0, 0]
+    right = [0, 0, 0]
+    left = create(l, m, i*2)
+    right = create(m+1, r, i*2+1)
+    for j in range(3):
+        tree[i][j] += left[j] + right[j]
+    return tree[i]
+
+
+def update(l, r, i):
+    if l <= x <= r:
+        tree[i][lst[x-1]] -= 1
+        tree[i][y] += 1
+
+    if l == r: return
+
+    m = (l+r)//2
+    if l <= x <= m:
+        update(l, m, i*2)
+    else:
+        update(m+1, r, i*2+1)
+
+
+def get(l, r, i):
+    if x <= l and r <= y:
+        return tree[i]
+
+    left = [0, 0, 0]
+    right = [0, 0, 0]
+    now = [0, 0, 0]
+    m = (l+r)//2
+    if x <= m:
+        left = get(l, m, i*2)
+    if m+1 <= y:
+        right = get(m+1, r, i*2+1)
+    for j in range(3):
+        now[j] += left[j] + right[j]
+    return now
+
 
 while True:
-    N, K = map(int, input().split())
-    lst = list(map(int, input().split()))
-    temp = []
-    for i in range(N):
-        if lst[i] < 0:
-            temp.append([i+1, temp[-1][1]+1])
-        elif lst[i] == 0:
-            temp.append([i+1, 0])
-    
-    for _ in range(K):
-        M, n1, n2 = input().split()
-        n1, n2 = int(n1), int(n2)
-
-        l, r = 0, len(temp)
-        while l < r:
-            m = (l+r)//2
-            if temp[m][0] < n1:
-                l = m
-            elif temp[m][0] > n1:
-                r = m-1
-            else:
-                break
-
-        if M == 'C':
-            if (temp[m][1] < 0 and n2 < 0) or temp[m][1] == n2: continue
-            
-        else:
-            pass
+    try:
+        N, K = map(int, input().split())
+        lst = list(map(int, input().split()))
+        for i in range(N):
+            if lst[i] > 0:
+                lst[i] = 1
+            elif lst[i] < 0:
+                lst[i] = 2
         
+        tree = [[0, 0, 0] for _ in range(N*4)]
+        create(1, N, 1)
+
+        answer = ''
+        for _ in range(K):
+            M, x, y = input().split()
+            x, y = int(x), int(y)
+            if M == 'C':
+                if y > 0:
+                    y = 1
+                elif y < 0:
+                    y = 2
+                if lst[x-1] != y:
+                    update(1, N, 1)
+                    lst[x-1] = y
+            else:
+                temp = get(1, N, 1)
+                if temp[0]:
+                    answer += '0'
+                elif temp[2]%2:
+                    answer += '-'
+                else:
+                    answer += '+'
+        
+        print(answer)
+    except Exception:
+        break
 
 
 '''
