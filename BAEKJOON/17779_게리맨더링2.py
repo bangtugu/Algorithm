@@ -70,5 +70,5 @@ for i in range(1, N-1):
                     # ans = min(ans, check(i, j, z, w))
 check(1, 0, 1, 3)
 
-
+print()
 print(ans)
