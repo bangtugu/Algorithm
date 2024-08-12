@@ -1,22 +1,39 @@
 import sys
 input = sys.stdin.readline
+import heapq
 
 N, M, X = map(int, input().split())
-cost = [[-1]*N for _ in range(N)]
+cost = [[] for _ in range(N)]
 
 for _ in range(M):
     a, b, c = map(int, input().split())
     a -= 1
     b -= 1
-    cost[a][b] = c
+    cost[a].append([c, b])
 
 
+def find(n):
+    lst = [-1]*N
+    lst[n] = 0
+    Q = [[0, n]]
+
+    while Q:
+        v, now = heapq.heappop(Q)
+
+        for c, nex in cost[now]:
+            if lst[nex] == -1 or lst[nex] > c+v:
+                lst[nex] = c+v
+                heapq.heappush(Q, [c+v, nex])
+
+    return lst
 
 
-
-answer = N*10000
+return_cost = find(X-1)
+answer = 0
 for i in range(N):
-    answer = min(answer, cost[i][N] + cost[N][i])
+    if i == X-1: continue
+    going_cost = find(i)
+    answer = max(answer, going_cost[X-1] + return_cost[i])
 
 print(answer)
 
