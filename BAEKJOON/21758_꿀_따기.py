@@ -1,25 +1,19 @@
 import sys
-sys.stdin = open('21758_input.txt', 'r')
+input = sys.stdin.readline
 
-T = int(input())
+N = int(input())
 
-for test_case in range(1, T+1):
-    N = int(input())
-    a = list(map(int, input().split()))
+lst = list(map(int, input().split()))
+all_sum = sum(lst)
+sum1 = all_sum - lst[0]
+sum2 = all_sum - lst[-1]
+answer = 0
 
-    honey = sum(a[1:-1]) + max(a)
+for i in range(1, N-1):
+    answer = max(answer, all_sum-lst[0]-lst[-1]+lst[i])
+    sum1 -= lst[i]
+    sum2 -= lst[-(i+1)]
+    answer = max(answer, all_sum-lst[0]-lst[i]+sum1)
+    answer = max(answer, all_sum-lst[-1]-lst[-(i+1)]+sum2)
 
-    cut = 1
-    while cut < len(a)-1 and a[cut] >= a[cut+1] * 2:
-        cut += 1
-
-    honey = max(honey, sum(a[1:] + a[cut+1:]) - a[cut])
-
-    cut = -3
-    while cut * (-1) <= len(a)-1 and a[cut+1] >= a[cut] * 2:
-        cut -= 1
-
-    honey = max(honey, sum(a[:-1] + a[:cut+1]) - a[cut+1])
-
-    print('#{} {}'.format(test_case, honey))
-
+print(answer)
