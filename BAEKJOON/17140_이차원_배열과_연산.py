@@ -56,9 +56,13 @@ def calcC():
 r, c, k = map(int, input().split())
 
 table = [list(map(int, input().split())) for _ in range(3)]
+for i in range(3):
+    n1, n2, n3 = map(int, input().split())
+    table[i][0] = n1
+    table[i][1] = n2
+    table[i][2] = n3
 
 cnt = 0
-
 while cnt < 100:
 
     if len(table) >= c and len(table[0]) >= r and table[r-1][c-1] == k:
