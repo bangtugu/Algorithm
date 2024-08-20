@@ -1,61 +1,67 @@
-def calcline(lst):
+import sys
+input = sys.stdin.readline
 
-    temp_lst = []
-    temp_dic = {}
 
-    for num in lst:
-        if num != 0:
-            if num in tuple(temp_dic.keys()):
-                temp_dic[num] += 1
+def calcr():
+
+    max_lr = 0
+    for i in range(lc):
+
+        dic = {}
+        for j in range(lr):
+            if not table[i][j]: continue
+            if table[i][j] not in dic:
+                dic[table[i][j]] = 1
             else:
-                temp_dic[num] = 1
+                dic[table[i][j]] += 1
+        
+        key_lst = sorted(list(dic.keys()), key = lambda x: [dic[x], x])
 
-    exist_num = list(sorted(temp_dic.keys(), key = lambda x : (temp_dic[x], x)))
+        for z in range(100):
+            if z >= len(key_lst)*2:
+                table[i][z] = 0
+            elif z%2:
+                table[i][z] = dic[key_lst[z//2]]
+            else:
+                table[i][z] = key_lst[z//2]
 
-    for num in exist_num:
-        temp_lst.append(num)
-        temp_lst.append(temp_dic[num])
+        max_lr = max(max_lr, len(key_lst)*2)
 
-    return temp_lst
-
-
-def calcR():
-
-    temp = []
-
-    for i in range(len(table)):
-        temp.append(calcline(table[i]))
-
-    max_len = max(map(len, temp))
-
-    for i in range(len(temp)):
-        if len(temp[i]) < max_len:
-            temp[i].extend([0] * (max_len - len(temp[i])))
-
-    return(temp)
+    return min(100, max_lr)
 
 
-def calcC():
+def calcc():
+    
+    max_lc = 0
+    for i in range(lr):
 
-    temp = []
+        dic = {}
+        for j in range(lc):
+            if not table[j][i]: continue
+            if table[j][i] not in dic:
+                dic[table[j][i]] = 1
+            else:
+                dic[table[j][i]] += 1
+        
+        key_lst = sorted(list(dic.keys()), key = lambda x: [dic[x], x])
 
-    for i in range(len(table[0])):
-        temp.append(calcline([table[j][i] for j in range(len(table))]))
+        for z in range(100):
+            if z >= len(key_lst)*2:
+                table[z][i] = 0
+            elif z%2:
+                table[z][i] = dic[key_lst[z//2]]
+            else:
+                table[z][i] = key_lst[z//2]
+        
+        max_lc = max(max_lc, len(key_lst)*2)
 
-    max_len = max(map(len, temp))
-
-    new_table = [[0] * len(temp) for _ in range(max_len)]
-
-    for i in range(len(temp)):
-        for j in range(len(temp[i])):
-            new_table[j][i] = temp[i][j]
-
-    return(new_table)
+    return min(100, max_lc)
 
 
 r, c, k = map(int, input().split())
-
-table = [list(map(int, input().split())) for _ in range(3)]
+lr = 3
+lc = 3
+table = [[0]*100 for _ in range(100)]
 for i in range(3):
     n1, n2, n3 = map(int, input().split())
     table[i][0] = n1
@@ -63,24 +69,19 @@ for i in range(3):
     table[i][2] = n3
 
 cnt = 0
-while cnt < 100:
+while cnt < 101:
 
-    if len(table) >= c and len(table[0]) >= r and table[r-1][c-1] == k:
+    if table[r-1][c-1] == k:
         break
 
-    nowc = len(table)
-    nowr = len(table[0])
-
-    if nowc >= nowr:
-        table = calcR()
-
+    if lc >= lr:
+        lr = calcr()
     else:
-        table = calcC()
+        lc = calcc()
 
     cnt += 1
 
-
-if cnt >= 100:
+if cnt > 100:
     print(-1)
 else:
     print(cnt)
