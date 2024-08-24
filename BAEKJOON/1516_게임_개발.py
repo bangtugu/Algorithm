@@ -21,6 +21,7 @@ while True:
 
         if not need_lst[i]:
             complete[i] = need_time[i]
+            change += 1
             continue
 
         lst = [complete[need-1] for need in need_lst[i]]
