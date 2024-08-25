@@ -12,40 +12,44 @@ for tc in range(TC):
 
     for _ in range(M):
         s, e, d = map(int, input().split())
-        table[s-1][e-1] = d if not table[s-1][e-1] else min(d, table[s-1][e-1])
-        table[e-1][s-1] = d if not table[e-1][s-1] else min(d, table[e-1][s-1])
+        if s == e: continue
+        table[s-1][e-1] = d if table[s-1][e-1] == False else min(d, table[s-1][e-1])
+        table[e-1][s-1] = d if table[e-1][s-1] == False else min(d, table[e-1][s-1])
         path[s-1].add(e-1)
         path[e-1].add(s-1)
 
-    ws = []
+    ws = set()
     for _ in range(W):
         s, e, d = map(int, input().split())
-        table[s-1][e-1] = -d if not table[s-1][e-1] else min(-d, table[s-1][e-1])
-        ws.append(s-1)
+        table[s-1][e-1] = -d if table[s-1][e-1] == False else min(-d, table[s-1][e-1])
+        ws.add((s-1, e-1))
         path[s-1].add(e-1)
 
     for i in range(N):
-        table[i][i] = 0
+        if not table[i][i]: table[i][i] = 0
         path[i] = list(path[i])
 
+
+    Q = deque()
+    for s, e in ws:
+        Q.append([s, e, table[s][e]])
     loop = False
-    for s in ws:
+
+    while Q:
+        s, now, v = Q.popleft()
         if loop: break
-        Q = deque()
-        for e in path[s]:
-            Q.append(e)
-        while Q:
-            if table[s][s] < 0:
+
+        if table[s][now] < v: continue
+
+        for e in path[now]:
+            if table[s][e] is False:
+                table[s][e] = table[s][now] + table[now][e]
+                Q.append([s, e, table[s][e]])
+            elif table[s][e] > table[s][now] + table[now][e]:
+                table[s][e] = table[s][now] + table[now][e]
+                Q.append([s, e, table[s][e]])
+            if e == s and table[s][s] < 0:
                 loop = True
-                break
-            now = Q.popleft()
-            for e in path[now]:
-                if table[s][e] == False:
-                    table[s][e] = table[s][now] + table[now][e]
-                    Q.append(e)
-                elif table[s][now] + table[now][e] < table[s][e]:
-                    table[s][e] = table[s][now] + table[now][e]
-                    Q.append(e)
 
     if loop:
         print('YES')
