@@ -68,18 +68,44 @@
 
 
 
+# N, M, B = map(int, input().split())
+# land = [list(map(int, input().split())) for _ in range(N)]
+
+# result_time = 0
+
+# total = 0
+
+# for line in land:
+#     total += sum(line)
+
+# average = total//(N*M)
+
+# print(result_time, land[0][0], total)
+
+
+import sys
+input = sys.stdin.readline
+
 N, M, B = map(int, input().split())
-land = [list(map(int, input().split())) for _ in range(N)]
+nums = [0]*257
+for _ in range(N):
+    for n in list(map(int, input().split())):
+        nums[n] += 1
 
-result_time = 0
+answer_time, answer_h = sys.maxsize, 0
+for h in range(257):
+    now_time, now_block = 0, B
+    for i in range(257):
+        if not nums[i]: continue
+        if i < h:
+            now_time += (h-i)*nums[i]
+            now_block -= (h-i)*nums[i]
+        else:
+            now_time += ((i-h)*2)*nums[i]
+            now_block += (i-h)*nums[i]
 
-total = 0
+    if now_block >= 0 and now_time <= answer_time:
+        answer_time = now_time
+        answer_h = h
 
-for line in land:
-    total += sum(line)
-
-average = total//(N*M)
-
-
-
-print(result_time, land[0][0], total)
+print(answer_time, answer_h)
