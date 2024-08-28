@@ -90,39 +90,42 @@ for _ in range(M):
 
 
 def check():
+    same = 0
     for s in range(N):
         now = s
         for j in range(H):
             if line[j][now] == 1: now += 1
             elif line[j][now] == 2: now -= 1
-        if now != s: return False
-    return True
+        if now == s: same += 1
+    return same
 
 
-def dfs(y, x, n):
+def dfs(n):
     global answer
 
-    if n >= answer:
+    if answer != -1:
+        return
+    
+    temp = check()
+    if temp+(cnt-n)*2 < N:
         return
 
-    if check():
-        answer = min(answer, n)
+    if n == cnt:
+        if temp == N:
+            answer = cnt
         return
     
-    if n >= 3:
-        return
-    
-    for i in range(y, H):
-        for j in range(x if y==i else 0, N-1):
+    for i in range(H):
+        for j in range(N-1):
             if line[i][j] or line[i][j+1]: continue
             line[i][j], line[i][j+1] = 1, 2
-            dfs(i, j+2, n+1)
+            dfs(n+1)
             line[i][j], line[i][j+1] = 0, 0
+            
 
+answer = -1
+for cnt in range(4):
+    dfs(0)
+    if answer != -1: break
 
-answer = 4
-dfs(0, 0, 0)
-if answer > 3:
-    print(-1)
-else:
-    print(answer)
+print(answer)
