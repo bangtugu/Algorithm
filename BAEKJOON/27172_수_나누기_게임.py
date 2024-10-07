@@ -4,15 +4,17 @@ input = sys.stdin.readline
 N = int(input())
 dic = {}
 cards = list(map(int, input().split()))
+maxnum = 0
 for i in range(N):
+    maxnum = max(maxnum, cards[i])
     dic[cards[i]] = i
 
 answer = [0]*N
 cards.sort()
-for i in range(N):
-    for j in range(i+1, N):
-        if not cards[j] % cards[i]:
-            answer[dic[cards[i]]] += 1
-            answer[dic[cards[j]]] -= 1
+for card in cards:
+    for num in range(card*2, maxnum+1, card):
+        if num in dic:
+            answer[dic[num]] -= 1
+            answer[dic[card]] += 1
 
 print(*answer)
