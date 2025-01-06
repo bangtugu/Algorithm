@@ -1,5 +1,17 @@
 import sys
 input = sys.stdin.readline
-# sys.setrecursionlimit(1000) # 재귀시 사용
 
-'''밑으로 코드'''
+N, K = map(int, input().split())
+num = input().split()[0]
+stack = []
+
+for n in num:
+    while stack and stack[-1] < n and K > 0:
+        stack.pop()
+        K -= 1
+    stack.append(n)
+
+if K:
+    print(''.join(stack[:-K]))
+else:
+    print(''.join(stack))
