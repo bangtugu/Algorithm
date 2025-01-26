@@ -2,19 +2,19 @@ import sys
 input = sys.stdin.readline
 from heapq import heappush, heappop
 
-N, K = map(int, input().split())
+K, N = map(int, input().split())
 entity = list(map(int, input().split()))
 
-check = set(entity)
-HQ = entity[:]
-answer = []
+HQ = []
+for e in entity:
+    heappush(HQ, e)
 
-while len(answer) < K:
+cnt = N
+while cnt:
     now = heappop(HQ)
-    answer.append(now)
-    for e in entity:
-        if e*now not in check:
-            check.add(e*now)
-            heappush(HQ, e*now)
+    for e in entity:    
+        heappush(HQ, e*now)
+        if not now % e: break
+    cnt -= 1
 
-print(answer[-1])
+print(now)
