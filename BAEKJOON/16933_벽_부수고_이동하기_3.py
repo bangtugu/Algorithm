@@ -4,16 +4,13 @@ from collections import deque
 
 N, M, K = map(int, input().split())
 field = [input() for _ in range(N)]
-check = [[-1]*M for _ in range(N)]
+check = [[[-1]*(M) for _ in range(N)] for _ in range(K+1)]
 dy, dx = [1, -1, 0, 0], [0, 0, 1, -1]
-Q = deque()
-
-Q.append([0, 0, 0, 1])
-check[0][0] = 1
+Q = deque([[0, 0, 0, 1]])
+check[0][0][0] = 1
 answer = -1
-cnt = 1
+
 while Q:
-    print(Q)
     y, x, c, l = Q.popleft()
 
     if y == N-1 and x == M-1:
@@ -26,15 +23,15 @@ while Q:
         nx = x + dx[d]
 
         if ny < 0 or nx < 0 or ny >= N or nx >= M: continue
-        if field[ny][nx] == '0' and check[ny][nx] == -1:
-            check[ny][nx] = l + 1
+        
+        if field[ny][nx] == '0' and check[c][ny][nx] == -1:
+            check[c][ny][nx] = l
             Q.append([ny, nx, c, l+1])
         
-        if field[ny][nx] == '1' and c < K:
+        elif field[ny][nx] == '1' and c < K and check[c+1][ny][nx] == -1:
             if day:
-                if check[ny][nx] == -1:
-                    check[ny][nx] = l+1
-                    Q.append([ny, nx, c+1, l+1])
+                check[c+1][ny][nx] = l
+                Q.append([ny, nx, c+1, l+1])
             else:
                 Q.append([y, x, c, l+1])
 
