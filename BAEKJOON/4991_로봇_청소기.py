@@ -25,21 +25,21 @@ def move(y1, x1, y2, x2):
 
 
 def dfs(now, v):
+    global answer
+    if v >= answer: return
     if sum(check) == len(lst):
-        return v
+        answer = v
+        return
     
-    value = N*M*len(lst)
     for i in range(len(lst)):
         if check[i]: continue
         check[i] = 1
-        value = min(value, dfs(i, v+cost[now][i]))
+        dfs(i, v+cost[now][i])
         check[i] = 0
-    
-    return value
 
 
 while M+N:
-    answer = 0
+    answer = N*M*11
     mapp = []
     for _ in range(N):
         mapp.append(input().split()[0])
@@ -61,13 +61,13 @@ while M+N:
             cost[j][i] = c
     
     for line in cost:
-        answer = min(line)
-        if answer <= -1: break
+        if min(line) <= -1:
+            answer = -1
+            break
     else:
-        temp = [-1]*len(lst)
         check = [0]*len(lst)
         check[0] = 1
-        answer = dfs(0, 0)
+        dfs(0, 0)
 
     print(answer)
     M, N = map(int, input().split())
